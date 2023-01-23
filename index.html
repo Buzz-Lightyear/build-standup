@@ -1,0 +1,106 @@
+<html>
+    <head>
+        <title>Standup</title>
+        <link rel="stylesheet" href="main.css" type="text/css" />
+        <script type="text/javascript" src="Winwheel.js"></script>
+    </head>
+    <body>
+        <div align="center">
+            <h1>Build Platforms Standup Selector</h1>
+            <h3>Because deciding who goes next is too much effort</h3>
+            <br />
+            <br />
+            <h2 id='person'>?</h2>
+            <br/>
+            <br/>
+            <table cellpadding="0" cellspacing="0" border="0">
+                <tr>
+                    <td>
+                        <div class="power_controls">
+                            <img id="spin_button" src="spin_on.png" class="clickable" alt="Spin" onClick="startSpin();" />
+                            <br /><br />
+                        </div>
+                    </td>
+                    <td width="438" height="582" class="the_wheel" align="center" valign="center">
+                        <canvas id="canvas" width="434" height="434">
+                            <p style="{color: white}" align="center">Sorry, your browser doesn't support canvas. Please try another.</p>
+                        </canvas>
+                    </td>
+                    <td width="438" height="582" class="profile_pic">
+                      <div>
+                        <img id="profile">
+                      </div>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <script>
+            // Create new wheel object specifying the parameters at creation time.
+            let participants = [
+                   {'fillStyle' : '#89f26e', 'text' : 'Ethan'},
+                   {'fillStyle' : '#7de6ef', 'text' : 'Eugene'},
+                   {'fillStyle' : '#eae56f', 'text' : 'Jie'},
+                   {'fillStyle' : '#e7706f', 'text' : 'Shawn'},
+                   {'fillStyle' : '#eae56f', 'text' : 'Shivani'},
+                   {'fillStyle' : '#89f26e', 'text' : 'Srini'},
+                   {'fillStyle' : '#7de6ef', 'text' : 'Stefan'},
+                   {'fillStyle' : '#7de6ef', 'text' : 'Yiming'},
+                   {'fillStyle' : '#e7706f', 'text' : 'Tao'},
+                   {'fillStyle' : '#89f26e', 'text' : 'Nan'},
+                   {'fillStyle' : '#e7706f', 'text' : 'Shu'},
+                   {'fillStyle' : '#89f26e', 'text' : 'Srishti'},
+                   {'fillStyle' : '#eae56f', 'text' : 'Stephen'},
+                   {'fillStyle' : '#e7706f', 'text' : 'Vicky'},
+            ];
+
+            function createWheel(participants) {
+                return new Winwheel({
+                    'numSegments'   : participants.length,  // Specify number of segments.
+                    'outerRadius'   : 212,                  // Set radius to so wheel fits the background.
+                    'innerRadius'   : 120,                  // Set inner radius to make wheel hollow.
+                    'textFontSize'  : 16,                   // Set font size accordingly.
+                    'textMargin'    : 0,                    // Take out default margin.
+                    'segments'      : participants          // Define segments including colour and text.
+                    ,
+                    'animation' :                           // Define spin to stop animation.
+                    {
+                        'type'     : 'spinToStop',
+                        'duration' : 2,
+                        'spins'    : 2,
+                        'callbackFinished' : pickPerson
+                    }
+                });
+            }
+
+            let theWheel = createWheel(participants)
+
+            function startSpin()
+            {
+                document.getElementById("profile").src = ""
+                document.getElementById('profile').style.height= '0px'
+
+                document.getElementById("person").innerHTML = "?"
+
+                theWheel = createWheel(participants)
+                theWheel.animation.spins = 3;
+                theWheel.startAnimation();
+            }
+
+            function pickPerson(indicatedSegment)
+            {   
+                var imgSrc = "images/"+indicatedSegment.text.toLowerCase()+".jpg"
+                document.getElementById("profile").src = imgSrc
+                document.getElementById('profile').style.height= '400px'
+                document.getElementById("person").innerHTML = indicatedSegment.text.toUpperCase()
+                
+                let newParticipants = []
+                participants.forEach(function (participant, i) {
+                  if(!(participant["text"] === indicatedSegment.text)) {
+                    newParticipants.push(participant)
+                  }
+                });
+                participants = newParticipants
+            }
+        </script>
+    </body>
+</html>
